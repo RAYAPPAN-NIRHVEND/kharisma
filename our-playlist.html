@@ -1,0 +1,420 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Our Playlist · Kharisma & Nirhvend</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,400;1,700&family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300;1,400&display=swap" rel="stylesheet">
+<style>
+:root {
+  --crimson: #8B0000;
+  --gold: #C9A84C;
+  --gold-pale: #F9E8B0;
+  --dark: #0D0200;
+}
+* { margin:0; padding:0; box-sizing:border-box; }
+body {
+  background: radial-gradient(ellipse at 50% 0%, #2C0800 0%, #0D0200 60%);
+  min-height: 100vh;
+  font-family: 'Cormorant Garamond', serif;
+  color: var(--gold-pale);
+  padding-bottom: 120px;
+}
+
+/* HEADER */
+.header {
+  text-align: center;
+  padding: 3rem 2rem 2rem;
+  border-bottom: 1px solid rgba(201,168,76,0.1);
+  position: relative;
+}
+.header-label {
+  font-size: 0.7rem;
+  letter-spacing: 0.5em;
+  color: rgba(201,168,76,0.4);
+  text-transform: uppercase;
+  margin-bottom: 0.5rem;
+}
+.header-title {
+  font-family: 'Playfair Display', serif;
+  font-size: clamp(2rem, 6vw, 3.5rem);
+  font-style: italic;
+  background: linear-gradient(135deg, var(--gold-pale), var(--gold));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+.header-sub {
+  font-size: 1rem;
+  font-style: italic;
+  color: rgba(249,232,176,0.4);
+  margin-top: 0.5rem;
+}
+
+/* NOW PLAYING BAR */
+.now-playing {
+  position: fixed;
+  bottom: 0; left: 0; right: 0;
+  background: linear-gradient(to top, rgba(13,2,0,0.98), rgba(26,5,0,0.95));
+  border-top: 1px solid rgba(201,168,76,0.2);
+  padding: 1rem 2rem;
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+  backdrop-filter: blur(12px);
+  z-index: 100;
+}
+.now-disc {
+  width: 48px; height: 48px;
+  background: linear-gradient(135deg, var(--crimson), #3D0A00);
+  border: 1px solid rgba(201,168,76,0.3);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.2rem;
+  flex-shrink: 0;
+  animation: spin 4s linear infinite paused;
+}
+.now-disc.spinning { animation-play-state: running; }
+@keyframes spin { to { transform: rotate(360deg); } }
+.now-info { flex: 1; min-width: 0; }
+.now-title {
+  font-family: 'Playfair Display', serif;
+  font-size: 1rem;
+  font-style: italic;
+  color: var(--gold-pale);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.now-artist {
+  font-size: 0.8rem;
+  color: rgba(201,168,76,0.5);
+  font-style: italic;
+}
+.ctrl-btn {
+  background: transparent;
+  border: 1px solid rgba(201,168,76,0.25);
+  color: var(--gold);
+  width: 40px; height: 40px;
+  border-radius: 50%;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: all 0.3s;
+  flex-shrink: 0;
+}
+.ctrl-btn:hover { background: rgba(201,168,76,0.1); border-color: var(--gold); }
+
+/* TRACK LIST */
+.tracklist {
+  max-width: 680px;
+  margin: 2rem auto;
+  padding: 0 1.5rem;
+}
+
+.track {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 1rem 1.2rem;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: all 0.3s;
+  border: 1px solid transparent;
+  margin-bottom: 0.4rem;
+}
+.track:hover {
+  background: rgba(139,0,0,0.15);
+  border-color: rgba(201,168,76,0.1);
+}
+.track.playing {
+  background: rgba(139,0,0,0.25);
+  border-color: rgba(201,168,76,0.3);
+  border-left: 3px solid var(--gold);
+}
+
+.track-num {
+  font-family: 'Playfair Display', serif;
+  font-size: 1rem;
+  color: rgba(201,168,76,0.3);
+  width: 28px;
+  text-align: center;
+  flex-shrink: 0;
+  font-style: italic;
+}
+.track.playing .track-num { color: var(--gold); font-size: 0.9rem; }
+
+.track-disc {
+  font-size: 1.1rem;
+  opacity: 0.3;
+  flex-shrink: 0;
+  transition: opacity 0.3s;
+}
+.track.playing .track-disc { opacity: 1; color: var(--gold); }
+
+.track-info { flex: 1; min-width: 0; }
+.track-title {
+  font-family: 'Playfair Display', serif;
+  font-size: 1rem;
+  color: rgba(249,232,176,0.85);
+  font-style: italic;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.track.playing .track-title { color: var(--gold-pale); }
+.track-artist {
+  font-size: 0.8rem;
+  color: rgba(249,232,176,0.35);
+  margin-top: 0.1rem;
+}
+.track-note {
+  font-size: 0.78rem;
+  font-style: italic;
+  color: rgba(201,168,76,0.4);
+  margin-top: 0.2rem;
+}
+
+/* EQUALIZER BARS */
+.track-bars {
+  display: flex;
+  align-items: flex-end;
+  gap: 2px;
+  height: 20px;
+  opacity: 0;
+  transition: opacity 0.3s;
+  flex-shrink: 0;
+}
+.track.playing .track-bars { opacity: 1; }
+.track-bars span {
+  display: block;
+  width: 3px;
+  background: var(--gold);
+  border-radius: 2px;
+  animation: eq 0.8s ease-in-out infinite alternate;
+}
+.track-bars span:nth-child(1) { height: 8px; animation-delay: 0s; }
+.track-bars span:nth-child(2) { height: 16px; animation-delay: 0.2s; }
+.track-bars span:nth-child(3) { height: 12px; animation-delay: 0.4s; }
+.track-bars span:nth-child(4) { height: 6px; animation-delay: 0.6s; }
+@keyframes eq {
+  from { transform: scaleY(0.4); }
+  to { transform: scaleY(1); }
+}
+</style>
+</head>
+<body>
+
+<audio id="song-0" preload="none"><source src="assets/audio/audio_00.mp3" type="audio/mpeg"></audio>
+<audio id="song-1" preload="none"><source src="assets/audio/audio_01.mp3" type="audio/mpeg"></audio>
+<audio id="song-2" preload="none"><source src="assets/audio/audio_02.mp3" type="audio/mpeg"></audio>
+<audio id="song-3" preload="none"><source src="assets/audio/audio_03.mp3" type="audio/mpeg"></audio>
+<audio id="song-4" preload="none"><source src="assets/audio/audio_04.mp3" type="audio/mpeg"></audio>
+<audio id="song-5" preload="none"><source src="assets/audio/audio_05.mp3" type="audio/mpeg"></audio>
+<audio id="song-6" preload="none"><source src="assets/audio/audio_06.mp3" type="audio/mpeg"></audio>
+<audio id="song-7" preload="none"><source src="assets/audio/audio_07.mp3" type="audio/mpeg"></audio>
+<audio id="song-8" preload="none"><source src="assets/audio/audio_08.mp3" type="audio/mpeg"></audio>
+<audio id="song-9" preload="none"><source src="assets/audio/audio_09.mp3" type="audio/mpeg"></audio>
+
+
+<div class="header">
+  <p class="header-label">Kharisma & Nirhvend · Our Songs</p>
+  <h1 class="header-title">Our Playlist</h1>
+  <p class="header-sub">Lagu-lagu yang selalu bring me back to you 🌹</p>
+</div>
+
+<div class="tracklist">
+  
+    <div class="track" id="track-0" onclick="playSong(0)">
+      <div class="track-num" id="tnum-0">01</div>
+      <div class="track-disc">♫</div>
+      <div class="track-info">
+        <div class="track-title">Haan Ke Haan</div>
+        <div class="track-artist">Monali Thakur · Maharaj</div>
+        <div class="track-note">The song that plays when I think of you 🌹</div>
+      </div>
+      <div class="track-bars" id="bars-0">
+        <span></span><span></span><span></span><span></span>
+      </div>
+    </div>
+    <div class="track" id="track-1" onclick="playSong(1)">
+      <div class="track-num" id="tnum-1">02</div>
+      <div class="track-disc">♫</div>
+      <div class="track-info">
+        <div class="track-title">Mudhal Nee Mudivum Nee</div>
+        <div class="track-artist">Sid Sriram · Darbuka Siva</div>
+        <div class="track-note">You were my first — dan semoga, yang terakhir</div>
+      </div>
+      <div class="track-bars" id="bars-1">
+        <span></span><span></span><span></span><span></span>
+      </div>
+    </div>
+    <div class="track" id="track-2" onclick="playSong(2)">
+      <div class="track-num" id="tnum-2">03</div>
+      <div class="track-disc">♫</div>
+      <div class="track-info">
+        <div class="track-title">Ranjha</div>
+        <div class="track-artist">B Praak · Shershaah</div>
+        <div class="track-note">Karena kamu adalah rumahku</div>
+      </div>
+      <div class="track-bars" id="bars-2">
+        <span></span><span></span><span></span><span></span>
+      </div>
+    </div>
+    <div class="track" id="track-3" onclick="playSong(3)">
+      <div class="track-num" id="tnum-3">04</div>
+      <div class="track-disc">♫</div>
+      <div class="track-info">
+        <div class="track-title">Raataan Lambiyan</div>
+        <div class="track-artist">Jubin · Asees · Shershaah</div>
+        <div class="track-note">Long nights feel shorter with you</div>
+      </div>
+      <div class="track-bars" id="bars-3">
+        <span></span><span></span><span></span><span></span>
+      </div>
+    </div>
+    <div class="track" id="track-4" onclick="playSong(4)">
+      <div class="track-num" id="tnum-4">05</div>
+      <div class="track-disc">♫</div>
+      <div class="track-info">
+        <div class="track-title">Urugi Urugi</div>
+        <div class="track-artist">Raj Hariharan · Siddhu Kumar</div>
+        <div class="track-note">Melting slowly — just like my heart for you</div>
+      </div>
+      <div class="track-bars" id="bars-4">
+        <span></span><span></span><span></span><span></span>
+      </div>
+    </div>
+    <div class="track" id="track-5" onclick="playSong(5)">
+      <div class="track-num" id="tnum-5">06</div>
+      <div class="track-disc">♫</div>
+      <div class="track-info">
+        <div class="track-title">O Maahi</div>
+        <div class="track-artist">Arijit Singh · Dunki · Pritam</div>
+        <div class="track-note">O Maahi — panggilanku untukmu</div>
+      </div>
+      <div class="track-bars" id="bars-5">
+        <span></span><span></span><span></span><span></span>
+      </div>
+    </div>
+    <div class="track" id="track-6" onclick="playSong(6)">
+      <div class="track-num" id="tnum-6">07</div>
+      <div class="track-disc">♫</div>
+      <div class="track-info">
+        <div class="track-title">Apna Bana Le</div>
+        <div class="track-artist">Arijit Singh · Bhediya</div>
+        <div class="track-note">Make me yours — I already made you mine</div>
+      </div>
+      <div class="track-bars" id="bars-6">
+        <span></span><span></span><span></span><span></span>
+      </div>
+    </div>
+    <div class="track" id="track-7" onclick="playSong(7)">
+      <div class="track-num" id="tnum-7">08</div>
+      <div class="track-disc">♫</div>
+      <div class="track-info">
+        <div class="track-title">Kaun Tujhe</div>
+        <div class="track-artist">Palak Muchhal · MS Dhoni</div>
+        <div class="track-note">Who loves you like I do? Nobody</div>
+      </div>
+      <div class="track-bars" id="bars-7">
+        <span></span><span></span><span></span><span></span>
+      </div>
+    </div>
+    <div class="track" id="track-8" onclick="playSong(8)">
+      <div class="track-num" id="tnum-8">09</div>
+      <div class="track-disc">♫</div>
+      <div class="track-info">
+        <div class="track-title">Tere Vaaste</div>
+        <div class="track-artist">Varun J · Sachin-Jigar</div>
+        <div class="track-note">Semua ini — tere vaaste, for you</div>
+      </div>
+      <div class="track-bars" id="bars-8">
+        <span></span><span></span><span></span><span></span>
+      </div>
+    </div>
+    <div class="track" id="track-9" onclick="playSong(9)">
+      <div class="track-num" id="tnum-9">10</div>
+      <div class="track-disc">♫</div>
+      <div class="track-info">
+        <div class="track-title">Gehra Hua</div>
+        <div class="track-artist">Arijit Singh · Dhurandhar</div>
+        <div class="track-note">Deep as the ocean — deeper than I knew</div>
+      </div>
+      <div class="track-bars" id="bars-9">
+        <span></span><span></span><span></span><span></span>
+      </div>
+    </div>
+</div>
+
+<!-- NOW PLAYING -->
+<div class="now-playing">
+  <div class="now-disc" id="now-disc">🌹</div>
+  <div class="now-info">
+    <div class="now-title" id="now-title">Select a song to play...</div>
+    <div class="now-artist" id="now-artist">Kharisma & Nirhvend · Our Playlist</div>
+  </div>
+  <button class="ctrl-btn" onclick="playPrev()">⏮</button>
+  <button class="ctrl-btn" onclick="playNext()">⏭</button>
+</div>
+
+<script>
+
+let currentSong = -1;
+let isPlaying = false;
+const totalSongs = 10;
+
+function playSong(idx) {
+  if (currentSong === idx && isPlaying) {
+    document.getElementById('song-' + idx).pause();
+    isPlaying = false;
+    document.getElementById('track-' + idx).classList.remove('playing');
+    document.getElementById('tnum-' + idx).textContent = String(idx+1).padStart(2,'0');
+    return;
+  }
+
+  if (currentSong >= 0) {
+    const prev = document.getElementById('song-' + currentSong);
+    if (prev) { prev.pause(); prev.currentTime = 0; }
+    document.getElementById('track-' + currentSong)?.classList.remove('playing');
+    document.getElementById('tnum-' + currentSong).textContent = String(currentSong+1).padStart(2,'0');
+  }
+
+  currentSong = idx;
+  isPlaying = true;
+  const audio = document.getElementById('song-' + idx);
+  audio.play();
+  document.getElementById('track-' + idx).classList.add('playing');
+  document.getElementById('tnum-' + idx).textContent = '▶';
+  document.getElementById('now-title').textContent = ["Haan Ke Haan", "Mudhal Nee Mudivum Nee", "Ranjha", "Raataan Lambiyan", "Urugi Urugi", "O Maahi", "Apna Bana Le", "Kaun Tujhe", "Tere Vaaste", "Gehra Hua"][idx];
+  document.getElementById('now-artist').textContent = ["Monali Thakur \u00b7 Maharaj", "Sid Sriram \u00b7 Darbuka Siva", "B Praak \u00b7 Shershaah", "Jubin \u00b7 Asees \u00b7 Shershaah", "Raj Hariharan \u00b7 Siddhu Kumar", "Arijit Singh \u00b7 Dunki \u00b7 Pritam", "Arijit Singh \u00b7 Bhediya", "Palak Muchhal \u00b7 MS Dhoni", "Varun J \u00b7 Sachin-Jigar", "Arijit Singh \u00b7 Dhurandhar"][idx];
+
+  audio.onended = () => {
+    document.getElementById('track-' + idx).classList.remove('playing');
+    document.getElementById('tnum-' + idx).textContent = String(idx+1).padStart(2,'0');
+    const next = (idx + 1) % totalSongs;
+    setTimeout(() => playSong(next), 600);
+  };
+}
+
+function playNext() { playSong((currentSong + 1) % totalSongs); }
+function playPrev() { playSong((currentSong - 1 + totalSongs) % totalSongs); }
+
+
+// Spin disc when playing
+const origPlay = window.playSong;
+document.addEventListener('click', () => {
+  const disc = document.getElementById('now-disc');
+  // handled in playSong
+});
+
+// Override to spin disc
+const _playSong = playSong;
+window.playSong = function(idx) {
+  _playSong(idx);
+  document.getElementById('now-disc').classList.add('spinning');
+};
+</script>
+</body>
+</html>
